@@ -2,6 +2,7 @@
 """
 @author: u7177316 - Robert Wijaya
 """
+#Import libraries, modules, dataset
 import tensorflow as tf
 from models.net import model
 from dataset.boston import train_dataset, test_dataset, train_labels, test_labels, normed_train_data, normed_test_data
@@ -10,17 +11,15 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
 
+#Model declaration
 model = model()
 optimizer = tf.keras.optimizers.Adam(0.001)
 model.compile(loss='mse',
               optimizer=optimizer,
               metrics=['mae', 'mse'])
-# model.summary()
-# example_batch = normed_train_data[:10]
-# example_result = model.predict(example_batch)
-# print(example_result)
 
-#TRAINING
+#TRAINING Part
+
 # Display training progress by printing a single dot for each completed epoch
 class PrintDot(keras.callbacks.Callback):
   def on_epoch_end(self, epoch, logs):
@@ -34,6 +33,7 @@ history = model.fit(
   epochs=EPOCHS, validation_split = 0.2, verbose=0,
   callbacks=[PrintDot()])
 
+#Plot MAE and MSE during training
 hist = pd.DataFrame(history.history)
 hist['epoch'] = history.epoch
 print(hist)
@@ -67,13 +67,16 @@ def plot_history(history):
   
 plot_history(history)
 
+#TESTING part
 
+#Get loss value, mae and mse of testing dataset
 loss, mae, mse = model.evaluate(normed_test_data, test_labels, verbose=2)
 print("Testing set Mean Abs Error: {:5.2f} MEDV".format(mae))
 
 test_predictions = model.predict(normed_test_data).flatten()
 train_predictions = model.predict(normed_train_data).flatten()
 
+#Plot regression graph
 plt.scatter(test_labels, test_predictions, color= 'skyblue', edgecolor='navy')
 plt.title('Regression graph of testing dataset')
 plt.xlabel('Actual Values')
@@ -84,6 +87,7 @@ plt.xlim([0,plt.xlim()[1]])
 plt.ylim([0,plt.ylim()[1]])
 _ = plt.plot([-100, 100], [-100, 100])
 
+#Plot histogram
 sns.distplot(test_predictions - test_labels)
 plt.title("Histogram of Prediction error")
 plt.xlabel("Prediction Error")
@@ -100,7 +104,7 @@ print('R-square, Training: ',rsq)
 rsq = r2_score(test_labels,test_predictions) #R-Squared on the testing data
 print('R-square, Testing: ',rsq)
 
-# show the true value and predicted value in dataframe
+#Show the true value and predicted value
 true_predicted = pd.DataFrame(list(zip(test_labels, test_predictions)), 
                     columns=['True Value','Predicted Value'])
 print(true_predicted.head(10))
