@@ -48,6 +48,7 @@ Q: Do you need a GPU to run the project?
 
 A: No, you do not need a GPU to run this project. However, it will fasten the training of the model if you use a GPU.
 
+
 Q: How long does it take to train the model?
 
 A: For your information: 
@@ -55,6 +56,7 @@ A: For your information:
 Train with CPU (AMD Ryzen 3): 1 minute, 44 seconds. 
 
 Train with GPU (Google Colab): 1 minute, 25 seconds.
+
 
 Q: Do you provide the paper for this project?
 
